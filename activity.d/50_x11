@@ -1,0 +1,10 @@
+function check_x11_activity {
+	if xdotool search --onlyvisible --class "$1" &> /dev/null; then
+		return 0
+	else
+		return 1
+	fi
+}
+
+add_check '*' check_x11_activity
+

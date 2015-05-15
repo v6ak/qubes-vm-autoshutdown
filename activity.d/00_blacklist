@@ -1,0 +1,3 @@
+add_check dom0 true
+add_check sys-net true
+add_check sys-firewall true
