@@ -57,6 +57,10 @@ Paused VMs were not considered in the development. There is however probably no 
 
 When this script seems to work well on running VMs, paused VMs might be considered.
 
+## Will it be adopted by Qubes OS?
+
+This script is now rather a proof of concept and it will unlikely be added to Qubes without any modification. If you are interested about implementing this feature to Qubes, look at the related issue: https://github.com/QubesOS/qubes-issues/issues/832
+
 ## License
 
 WTFPL, without any warranty.
