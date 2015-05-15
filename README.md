@@ -51,6 +51,12 @@ If you are using a service VM, it should be blacklisted. See `activity.d/00_blac
 
 Yes, some parts of the script are hacky, especially the function qvm-ls-running. These parts might fail in some special conditions.
 
+### Paused VMs
+
+Paused VMs were not considered in the development. There is however probably no reason why they can't be supported. The X11 check should be possible on paused VMs, too. The blacklist is even simpler. But some custom checks might require some qvm-run call and so on.
+
+When this script seems to work well on running VMs, paused VMs might be considered.
+
 ## License
 
 WTFPL, without any warranty.
