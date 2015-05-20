@@ -26,20 +26,20 @@ The script is modular: You can add a new strategy for determining if a VM is *ac
 
 When VM is about being shut down and user starts an app, it might not notice the user's action in time. This might be improved by tight cooperation with Dom0<->DomU communication libraries.
 
-With a following assumption and a tight cooperation, we could even fully fix the race condition: When a VM is not *active*, it will not begin *active* unless user does some action through qragent.
+With a following assumption and a tight cooperation, we could even fully fix the race condition: When a VM is not *active*, it will not begin *active* unless user does some action through Qubes RPC.
 
-* This assumption seems to be reasonable. User can't directly interact with machines without a visible X11 window. He might interact through qragent or (in some special cases) through other interfaces like network and peripherial devices.
+* This assumption seems to be reasonable. User can't directly interact with machines without a visible X11 window. He might interact through Qubes RPC or (in some special cases) through other interfaces like network and peripherial devices.
 	* When user interacts through network or some periprerial device, he should blacklist the VM from automatic shutdown.
-	* When the user interacts through qragent, we can catch it by some tight integration
-* If qragent would provide shutdownPrepare and shutdownProceed function, we could fully fix the race condition.
-	* The shutdownPrepare function would change the qragent state to *preparing-for-shutdown* and return a new ShutdownTicket. The VM is in *preparing-for-shutdown* state iff there is a valid ShutdownTicket.
-	* Any qrexec API call (except some special cases) would invalidate the ShutdownTicket. (It would invalidate all ShutdownTicket-s if we allow more valid ShutdownTicket-s at one time instant.)
-	* After shutdownPrepare call, the script can check if a VM is active. If so, the ShutdownTicket can be cancelled.
+	* When the user interacts through Qubes RPC, we can catch it by some tight integration.
+* If Qubes core agent provides shutdownPrepare and shutdownProceed functions, we could fully fix the race condition.
+	* The shutdownPrepare function would change the API state to *preparing-for-shutdown* and return a new ShutdownTicket. The VM is in *preparing-for-shutdown* state iff there is a valid ShutdownTicket.
+	* Any Qubes RPC call (except some special cases) would invalidate the ShutdownTicket. (It would invalidate all ShutdownTicket-s if we allow more valid ShutdownTicket-s at one time instant. But I don't find multiple ShutdownTickets useful.)
+	* After shutdownPrepare call, the script can check if a VM is active. If so, the ShutdownTicket shall be cancelled.
 	* When all *activity*-related checks are passed and the VM is found to be *inactive*, the shutdownProceed function with the corresponding ShutdownTicket is called.
 	* The shutdownProceed function shuts the machine down iff the ShutdownTicket is valid.
-	* Some serialization in qragent is assumed. I am not sure about the qragent design, but I hope this assumption is reasonable.
+	* Some serialization in Qubes RPC calls is assumed. I am not sure about the RPC design, but I hope this assumption is reasonable. If there is no serialization, we would have to create it using a R/W lock.
 
-### It does not react to free RAM
+### It does not react to amount of free RAM
 
 It does the shutdown even if there is much free RAM. It could be optimized to shut the VM down iff there is low memory. This would however need either a frequent polling (=> higher CPU and power consumption) or tight cooperation with the Qubes memory manager.
 
