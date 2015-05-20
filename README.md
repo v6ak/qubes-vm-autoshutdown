@@ -9,9 +9,9 @@
 
 You need xdotool installed in dom0.
 
-You can install it by adding a line like the following one to crontab:
+Copy auto-shutdown.desktop to ~/.config/autostart and fix the path in the file. After this operation, the script will start on every login.
 
-    @reboot ~/auto-shutdown/loop.sh
+**Don't install it in crontab**, since it has no access to the `$DISPLAY`. In a previous version, this caused sudden VM shutdowns, sorry for that. The current version is more fail-safe and it just considers all VMs as active when xdotool fails for such reason. This is still not what we want, but it at least does not any harm in such situation.
 
 ## Modularity
 

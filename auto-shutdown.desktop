@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=VM Auto-Shutdown for Qubes OS by v6ak
+Type=Application
+Categories=Utility;
+X-GNOME-Autostart-enabled=true
+StartupNotify=true
+Exec=/home/username/auto-shutdown/loop.sh
+# Fix the path in <Exec> and copy me to ~/.config/autostart
+Hidden=false
+Terminal=false
+Icon=terminal
