@@ -1,8 +1,11 @@
+
 function check_x11_activity {
-	if xdotool search --onlyvisible --class "$1" &> /dev/null; then
-		return 0
-	else
+	# This is safe even if DISPLAY is not set and xdotool segfaults. But it is unafe when xdotool crashes with no output, as we can't distinguish between such crash and no related window.
+	# FIXME: regexp issues
+	if [ "$(xdotool search --onlyvisible --class "$1" 2>&1)" == "" ]; then
 		return 1
+	else
+		return 0
 	fi
 }
 

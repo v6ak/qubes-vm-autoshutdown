@@ -49,7 +49,7 @@ If you are using a service VM, it should be blacklisted. See `activity.d/00_blac
 
 ### Some edge cases
 
-Yes, some parts of the script are hacky, especially the function qvm-ls-running. These parts might fail in some special conditions.
+Yes, some parts of the script are hacky, especially the function qvm-ls-running. When searching for windows of a particular name, I pass the name as regexp, is also not ideal. These parts might fail in some special conditions.
 
 ### Paused VMs
 
