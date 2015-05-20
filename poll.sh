@@ -1,8 +1,8 @@
 #!/bin/bash
 # safety settings
-set -u # Not strictly needed, but it is safer
-set -e # NEEDED for safety and security!
-set -o pipefail # Not strictly needed, but it is safer
+set -u
+set -e
+set -o pipefail
 
 declare -A callbacks
 declare -A ids
@@ -70,6 +70,8 @@ done
 MEASUREMENTS_BEFORE_SHUTDOWN_DELAY=1
 MEASUREMENTS_BEFORE_SHUTDOWN_COUNT=30
 
+echo "Running tick on $DISPLAY…"
+
 #qvm-ls --raw-list
 qvm-ls-running | (
 	while read name; do
@@ -95,6 +97,7 @@ qvm-ls-running | (
 					# FIXME: Potential race condition
 					# Hard to fix without using some Qubes internals
 					qvm-shutdown "$name"
+					notify-send "Shutting down VM: $name"
 				fi
 			fi
 		fi
