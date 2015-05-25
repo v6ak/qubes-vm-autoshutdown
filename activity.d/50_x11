@@ -1,12 +1,20 @@
 
 function check_x11_activity {
 	# This is safe even if DISPLAY is not set and xdotool segfaults. But it is unafe when xdotool crashes with no output, as we can't distinguish between such crash and no related window.
+	# We can't use --onlyvisible, as it excludes windows on different KDE activities, invisible tray icon (e.g. when using autohide) and so on.
 	# FIXME: regexp issues
-	if [ "$(xdotool search --onlyvisible --class "$1" 2>&1)" == "" ]; then
-		return 1
-	else
-		return 0
-	fi
+	for i in $(xdotool search --class "$1" 2>&1); do
+		# I know the following condition is crazy, but that's for fail safety and blacklisting:
+		# * When there is a mess from xdotool (e.g. “Segmentation fault”), the xprop should fail. The crazy condition will succeed, as there is negation.
+		#   We will consider the VM as active, as it is better to leave an inactive VM running than to shutdown an active VM.
+		# * When the WM_NAME is “VMapp command”, we will ignore it. Unfortunately, I am not sure what the “VMapp command” is, but it seems to be a mess.
+		if ! ( xprop -id "$i" WM_NAME | grep -q '^WM_NAME(STRING) = "VMapp command"$'); then
+			return 0 # ACTIVE
+		fi
+	done
+	
+	# No window found
+	return 1 # INACTIVE
 }
 
 add_check '*' check_x11_activity
